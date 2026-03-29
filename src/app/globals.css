@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+@theme {
+  --color-banana-yellow: #FFE135;
+  --color-banana-cream: #FDFAF0;
+  --color-leaf-green: #4CAF50;
+}
