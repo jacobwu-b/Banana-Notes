@@ -27,7 +27,33 @@ export async function proxy(request: NextRequest) {
   );
 
   // Refresh session — do not remove this call.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  // Protect /dashboard/* — redirect unauthenticated users to /login
+  if (pathname.startsWith("/dashboard") && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies
+      .getAll()
+      .forEach((cookie) => response.cookies.set(cookie));
+    return response;
+  }
+
+  // Redirect authenticated users away from auth pages
+  if ((pathname === "/login" || pathname === "/signup") && user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies
+      .getAll()
+      .forEach((cookie) => response.cookies.set(cookie));
+    return response;
+  }
 
   return supabaseResponse;
 }

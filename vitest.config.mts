@@ -5,7 +5,9 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: "jsdom",
+    // Default to node — server action tests don't need a DOM.
+    // Add @vitest-environment jsdom at the top of files that test UI.
+    environment: "node",
   },
   resolve: {
     alias: {
