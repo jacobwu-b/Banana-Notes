@@ -51,7 +51,9 @@ Do not work ahead. Do not combine phases.
 #### Auth
 - Every route under /dashboard/* is protected. Unauthenticated users
   redirect to /login.
-- Use Supabase middleware (src/middleware.ts) for route protection.
+- Use Supabase proxy (src/proxy.ts) for route protection.
+  Note: Next.js 16 renamed "middleware" to "proxy". The file is src/proxy.ts,
+  the exported function is named `proxy`, and the config export is named `config`.
 - Never trust user input for user_id. Always derive it from the
   authenticated session server-side.
 
@@ -131,7 +133,8 @@ banana-notes/
 │   │   │   └── server.ts       ← Server Supabase client (cookies)
 │   │   └── types/
 │   │       └── note.ts         ← Note type definitions
-│   └── middleware.ts            ← Route protection (Supabase session refresh)
+│   └── proxy.ts                ← Route protection (Supabase session refresh)
+│                                  Next.js 16: was middleware.ts, now proxy.ts
 ├── supabase/
 │   └── migrations/
 │       └── 001_notes.sql       ← Notes table + RLS policies
