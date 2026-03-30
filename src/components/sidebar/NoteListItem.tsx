@@ -42,7 +42,6 @@ export function NoteListItem({ note }: { note: Note }) {
   async function handlePin() {
     setMenuOpen(false);
     await pinNote(note.id, !note.is_pinned);
-    router.refresh();
   }
 
   async function handleDuplicate() {
@@ -50,7 +49,6 @@ export function NoteListItem({ note }: { note: Note }) {
     const { data } = await duplicateNote(note.id);
     if (data) {
       router.push(`/dashboard/notes/${data.id}`);
-      router.refresh();
     }
   }
 
@@ -59,7 +57,6 @@ export function NoteListItem({ note }: { note: Note }) {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
     await deleteNote(note.id);
     router.push("/dashboard");
-    router.refresh();
   }
 
   return (

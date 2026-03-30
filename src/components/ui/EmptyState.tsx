@@ -13,7 +13,6 @@ export function EmptyState() {
     const { data } = await createNote();
     if (data) {
       router.push(`/dashboard/notes/${data.id}`);
-      router.refresh();
     }
     setLoading(false);
   }

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Note } from "@/lib/types/note";
 
@@ -31,6 +32,7 @@ export async function createNote(
     .single();
 
   if (error) return { data: null, error: error.message };
+  revalidatePath("/dashboard", "layout");
   return { data: data as Note, error: null };
 }
 
@@ -49,6 +51,7 @@ export async function deleteNote(id: string): Promise<ActionResult<null>> {
     .eq("user_id", user.id);
 
   if (error) return { data: null, error: error.message };
+  revalidatePath("/dashboard", "layout");
   return { data: null, error: null };
 }
 
@@ -70,6 +73,7 @@ export async function pinNote(
     .eq("user_id", user.id);
 
   if (error) return { data: null, error: error.message };
+  revalidatePath("/dashboard", "layout");
   return { data: null, error: null };
 }
 
@@ -107,5 +111,6 @@ export async function duplicateNote(id: string): Promise<ActionResult<Note>> {
     .single();
 
   if (insertError) return { data: null, error: insertError.message };
+  revalidatePath("/dashboard", "layout");
   return { data: copy as Note, error: null };
 }
