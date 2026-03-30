@@ -200,6 +200,20 @@ fix(auth): redirect to /login when session expires mid-session
 test(notes): add unit tests for createNote Server Action
 ```
 
+### Commit hygiene within a branch
+
+Within a feature branch, commit often. These commits are
+working notes — they do not need to be clean or meaningful.
+They will be squashed on merge.
+
+What matters:
+- The PR title (becomes the squash commit on main)
+- The PR description (becomes the squash commit body)
+
+The PR title must follow Conventional Commits format.
+Claude is responsible for generating a correct PR title
+and complete PR description before asking for review.
+
 ---
 
 ## 5. Testing Requirements
