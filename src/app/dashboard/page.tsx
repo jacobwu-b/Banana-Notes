@@ -1,13 +1,31 @@
-// Note list and editor implemented in Phase 3 (feat/note-list)
-export default function DashboardPage() {
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { EmptyState } from "@/components/ui/EmptyState";
+
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { data: notes } = await supabase
+    .from("notes")
+    .select("id")
+    .eq("user_id", user.id)
+    .is("deleted_at", null)
+    .order("is_pinned", { ascending: false })
+    .order("updated_at", { ascending: false })
+    .limit(1);
+
+  if (notes && notes.length > 0) {
+    redirect(`/dashboard/notes/${notes[0].id}`);
+  }
+
   return (
-    <div className="flex items-center justify-center h-[calc(100vh-57px)]">
-      <div className="text-center">
-        <span className="text-6xl" role="img" aria-label="banana">
-          🍌
-        </span>
-        <p className="text-gray-500 mt-4">Notes coming in Phase 3.</p>
-      </div>
+    <div className="flex items-center justify-center h-full">
+      <EmptyState />
     </div>
   );
 }

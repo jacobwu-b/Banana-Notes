@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
+import { Sidebar } from "@/components/sidebar/Sidebar";
 
 export default async function DashboardLayout({
   children,
@@ -12,13 +13,12 @@ export default async function DashboardLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   return (
-    <div className="min-h-screen bg-banana-cream">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+    <div className="h-screen flex flex-col bg-banana-cream overflow-hidden">
+      {/* Header */}
+      <header className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-2xl" role="img" aria-label="Banana Notes">
             🍌
@@ -37,7 +37,12 @@ export default async function DashboardLayout({
           </form>
         </div>
       </header>
-      {children}
+
+      {/* Two-column body */}
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar userId={user.id} />
+        <main className="flex-1 overflow-y-auto">{children}</main>
+      </div>
     </div>
   );
 }
